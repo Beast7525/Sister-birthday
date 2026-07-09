@@ -13,13 +13,14 @@
       height: 100%;
       overflow: hidden;
       background-color: #000;
+      font-family: sans-serif;
     }
     .circular-gallery {
       width: 100%;
       height: 100%;
       outline: none;
     }
-    
+
     /* Back button */
     .back-btn {
       position: absolute;
@@ -36,15 +37,53 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
       transition: all 0.3s ease;
       z-index: 1000;
+      font-size: 1rem;
     }
     .back-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 16px rgba(255,255,255,0.2);
+    }
+
+    /* Hint label */
+    .hint-label {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.4);
+      font-size: 0.85rem;
+      pointer-events: none;
+      z-index: 1000;
+      letter-spacing: 0.05em;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .back-btn {
+        top: 12px;
+        left: 12px;
+        padding: 8px 14px;
+        font-size: 0.85rem;
+      }
+      .hint-label {
+        font-size: 0.75rem;
+        bottom: 14px;
+      }
+    }
+    @media (max-width: 480px) {
+      .back-btn {
+        top: 10px;
+        left: 10px;
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
 <body>
-  <a href="carousel.html" class="back-btn">Back</a>
+  <a href="carousel.html" class="back-btn">&#8592; Back</a>
   <div id="gallery" class="circular-gallery" tabindex="0" role="region" aria-label="Circular image gallery. Use left and right arrow keys to navigate."></div>
+  <p class="hint-label">Drag or swipe to explore &bull; Use ← → keys to navigate</p>
 
   <script type="module">
     import { Camera, Mesh, Plane, Program, Renderer, Texture, Transform } from 'https://esm.sh/ogl@1.0.11';
@@ -274,6 +313,7 @@
             uniform vec2 uPlaneSizes;
             uniform sampler2D tMap;
             uniform float uBorderRadius;
+            uniform float uHover;
             varying vec2 vUv;
             
             float roundedBoxSDF(vec2 p, vec2 b, float r) {
@@ -292,11 +332,20 @@
               );
               vec4 color = texture2D(tMap, uv);
               
+              // Hover: brighten image and add warm color tint
+              vec3 hoverColor = color.rgb * (1.0 + uHover * 0.45);
+              hoverColor += vec3(uHover * 0.08, uHover * 0.04, uHover * 0.0);
+              
+              // Glow edge on hover
+              float edgeDist = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius - 0.01), uBorderRadius);
+              float glowAlpha = smoothstep(0.02, 0.0, edgeDist) * uHover * 0.7;
+              hoverColor = mix(hoverColor, vec3(1.0, 0.85, 0.4), glowAlpha);
+              
               float d = roundedBoxSDF(vUv - 0.5, vec2(0.5 - uBorderRadius), uBorderRadius);
               float edgeSmooth = 0.002;
               float alpha = 1.0 - smoothstep(-edgeSmooth, edgeSmooth, d);
               
-              gl_FragColor = vec4(color.rgb, alpha);
+              gl_FragColor = vec4(hoverColor, alpha);
             }
           `,
           uniforms: {
@@ -305,7 +354,8 @@
             uImageSizes: { value: [0, 0] },
             uSpeed: { value: 0 },
             uTime: { value: 100 * Math.random() },
-            uBorderRadius: { value: this.borderRadius }
+            uBorderRadius: { value: this.borderRadius },
+            uHover: { value: 0 }
           },
           transparent: true
         });
@@ -363,6 +413,10 @@
         this.speed = scroll.current - scroll.last;
         this.program.uniforms.uTime.value += 0.04;
         this.program.uniforms.uSpeed.value = this.speed;
+
+        // Smoothly animate hover uniform
+        const targetHover = this.isHovered ? 1.0 : 0.0;
+        this.program.uniforms.uHover.value = lerp(this.program.uniforms.uHover.value, targetHover, 0.08);
 
         const planeOffset = this.plane.scale.x / 2;
         const viewportOffset = this.viewport.width / 2;
@@ -483,6 +537,32 @@
         const item = width * itemIndex;
         this.scroll.target = this.scroll.target < 0 ? -item : item;
       }
+      onMouseHover(e) {
+        if (!this.medias || !this.viewport) return;
+        // Convert mouse position to viewport space
+        const rect = this.container.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const ndcX = ((clientX - rect.left) / rect.width) * 2 - 1;
+        const ndcY = -((clientY - rect.top) / rect.height) * 2 + 1;
+        const vpX = ndcX * (this.viewport.width / 2);
+        const vpY = ndcY * (this.viewport.height / 2);
+
+        this.medias.forEach(media => {
+          const px = media.plane.position.x;
+          const py = media.plane.position.y;
+          const hw = media.plane.scale.x / 2;
+          const hh = media.plane.scale.y / 2;
+          media.isHovered = (
+            vpX >= px - hw && vpX <= px + hw &&
+            vpY >= py - hh && vpY <= py + hh
+          );
+        });
+
+        // Change cursor when hovering over an image
+        const anyHovered = this.medias.some(m => m.isHovered);
+        this.container.style.cursor = anyHovered ? 'pointer' : 'grab';
+      }
       onResize() {
         this.screen = { width: this.container.clientWidth, height: this.container.clientHeight };
         this.renderer.setSize(this.screen.width, this.screen.height);
@@ -512,10 +592,12 @@
         this.boundOnTouchMove = this.onTouchMove.bind(this);
         this.boundOnTouchUp = this.onTouchUp.bind(this);
         this.boundOnKeyDown = this.onKeyDown.bind(this);
+        this.boundOnMouseHover = this.onMouseHover.bind(this);
         window.addEventListener('resize', this.boundOnResize);
         window.addEventListener('wheel', this.boundOnWheel);
         window.addEventListener('mousedown', this.boundOnTouchDown);
         window.addEventListener('mousemove', this.boundOnTouchMove);
+        window.addEventListener('mousemove', this.boundOnMouseHover);
         window.addEventListener('mouseup', this.boundOnTouchUp);
         window.addEventListener('touchstart', this.boundOnTouchDown);
         window.addEventListener('touchmove', this.boundOnTouchMove);
