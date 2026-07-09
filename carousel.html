@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="style.css">
+	<title>Document</title>
+</head>
+
+<body>
+	<div class="carousel">
+
+		<div class="carousel-control-button left"><input type="radio" name="carousel-control-input"></div>
+		<div class="carousel-control-button right"><input type="radio" name="carousel-control-input" checked></div>
+
+		<div class="carousel-rotation-direction">
+
+			<ul class="carousel-item-wrapper" style="--_num-elements: 11">
+
+				<li class="carousel-item" style="--_index: 1; --_image-url: url('strawberry.png')">
+					<a href="details.html" target="_blank">image 1</a>
+				</li>
+
+				<li class="carousel-item" style="--_index: 2; --_image-url: url('image 2.jpeg')">
+					<a href="details.html" target="_blank">Image 2</a>
+				</li>
+
+				<li class="carousel-item" style="--_index: 3; --_image-url: url('image 3.jpeg')">
+					<a href="details.html" target="_blank">Image 3</a>
+				</li>
+
+				<li class="carousel-item" style="--_index: 4; --_image-url: url('image 4.jpeg')">
+					<a href="details.html" target="_blank">Image 4</a>
+				</li>
+
+				<li class="carousel-item" style="--_index: 5; --_image-url: url('image 5.jpeg')">
+					<a href="details.html" target="_blank">Image 5</a>
+				</li>
+
+				<li class="carousel-item" style="--_index: 6; --_image-url: url('image 6.jpeg')">
+					<a href="details.html" target="_blank">Image 6</a>
+				</li>
+
+				<li class="carousel-item" style="--_index: 7; --_image-url: url('image 7.jpeg')">
+					<a href="details.html" target="_blank">Image 7</a>
+				</li>
+
+				<li class="carousel-item" style="--_index: 8; --_image-url: url('image 8.jpeg')">
+					<a href="details.html" target="_blank">Image 8</a>
+				</li>
+
+				<li class="carousel-item" style="--_index: 9; --_image-url: url('image 9.jpeg')">
+					<a href="details.html" target="_blank">Image 9</a>
+				</li>
+
+				<li class="carousel-item" style="--_index: 10; --_image-url: url('image 10.jpeg')">
+					<a href="details.html" target="_blank">Image 10</a>
+				</li>
+
+				<li class="carousel-item" style="--_index: 11; --_image-url: url('image 11.jpeg')">
+					<a href="details.html" target="_blank">Image 11</a>
+				</li>
+
+				<li class="carousel-ground"></li>
+
+			</ul>
+
+		</div>
+
+	</div>
+
+
+	<div id="imageModal" class="modal">
+		<span class="close-modal">&times;</span>
+		<img class="modal-content" id="fullSizeImage">
+		<a href="circle.html" class="go-circle-btn">Go to Circle</a>
+	</div>
+
+	<style>
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 100;
+			padding-top: 50px;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.9);
+			backdrop-filter: blur(5px);
+		}
+
+		.modal-content {
+			margin: auto;
+			display: block;
+			max-width: 90%;
+			max-height: 85vh;
+			border-radius: 8px;
+			box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+			animation: zoomIn 0.3s ease;
+		}
+
+		@keyframes zoomIn {
+			from {
+				transform: scale(0)
+			}
+
+			to {
+				transform: scale(1)
+			}
+		}
+
+		.close-modal {
+			position: absolute;
+			top: 20px;
+			right: 35px;
+			color: #f1f1f1;
+			font-size: 40px;
+			font-weight: bold;
+			cursor: pointer;
+			transition: 0.3s;
+		}
+
+		.close-modal:hover,
+		.close-modal:focus {
+			color: #bbb;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		.go-circle-btn {
+			position: absolute;
+			bottom: 50px;
+			left: 50%;
+			transform: translateX(-50%);
+			padding: 12px 24px;
+			background: #3b82f6;
+			color: #fff;
+			text-decoration: none;
+			border-radius: 8px;
+			font-weight: 600;
+			font-family: sans-serif;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+			z-index: 101;
+		}
+
+		.go-circle-btn:hover {
+			background: #2563eb;
+			transform: translateX(-50%) translateY(-2px);
+			box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+		}
+	</style>
+
+	<script>
+		const modal = document.getElementById('imageModal');
+		const fullImg = document.getElementById('fullSizeImage');
+		const closeBtn = document.getElementsByClassName('close-modal')[0];
+
+		document.querySelectorAll('.carousel-item a').forEach(link => {
+			link.addEventListener('click', function (e) {
+				e.preventDefault(); // Prevent opening details.html
+
+				const li = this.parentElement;
+				let bgUrl = li.style.getPropertyValue('--_image-url').trim();
+				if (bgUrl.startsWith('url(')) {
+					bgUrl = bgUrl.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
+				}
+
+				fullImg.src = bgUrl;
+				modal.style.display = 'block';
+			});
+		});
+
+		closeBtn.onclick = function () {
+			modal.style.display = 'none';
+		}
+
+		modal.onclick = function (e) {
+			if (e.target !== fullImg && !e.target.classList.contains('go-circle-btn')) {
+				modal.style.display = 'none';
+			}
+		}
+	</script>
+</body>
+
+</html>

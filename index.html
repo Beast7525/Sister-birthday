@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Login</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+		body {
+			margin: 0;
+			padding: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100vh;
+			background: linear-gradient(135deg, #a887a8 0%, #aa1fa6 100%);
+			font-family: 'Inter', sans-serif;
+			color: #f8fafc;
+		}
+
+		.login-container {
+			background: rgba(3, 3, 3, 0.897);
+			backdrop-filter: blur(12px);
+			padding: 40px;
+			border-radius: 16px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+			border: 1px solid rgba(65, 19, 19, 0.1);
+			width: 100%;
+			max-width: 400px;
+			text-align: center;
+		}
+
+		h2 {
+			margin-bottom: 24px;
+			font-weight: 600;
+			font-size: 1.5rem;
+			letter-spacing: 0.5px;
+		}
+
+		.input-group {
+			margin-bottom: 20px;
+			text-align: left;
+		}
+
+		.input-group label {
+			display: block;
+			margin-bottom: 8px;
+			font-size: 0.875rem;
+			color: #cbd5e1;
+		}
+
+		.input-group input {
+			width: 100%;
+			padding: 12px;
+			border-radius: 8px;
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			background: rgba(0, 0, 0, 0.2);
+			color: #fff;
+			font-size: 1rem;
+			box-sizing: border-box;
+			transition: all 0.3s ease;
+		}
+
+		.input-group input:focus {
+			outline: none;
+			border-color: #000000;
+			box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+			background: rgba(0, 0, 0, 0.3);
+		}
+
+		.login-btn {
+			width: 100%;
+			padding: 14px;
+			margin-top: 10px;
+			border-radius: 8px;
+			border: none;
+			background: #3b82f6;
+			color: #fff;
+			font-size: 1rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: background 0.3s ease, transform 0.1s ease;
+		}
+
+		.login-btn:hover {
+			background: #2563eb;
+		}
+
+		.login-btn:active {
+			transform: scale(0.98);
+		}
+
+		.error-message {
+			color: #ef4444;
+			font-size: 0.875rem;
+			margin-top: 16px;
+			display: none;
+			background: rgba(239, 68, 68, 0.1);
+			padding: 10px;
+			border-radius: 6px;
+			border: 1px solid rgba(239, 68, 68, 0.2);
+		}
+	</style>
+</head>
+
+<body>
+	<div class="login-container">
+		<h2></h2>
+		<form id="loginForm">
+			<div class="input-group">
+				<label for="username">Username</label>
+				<input type="text" id="username" required autocomplete="off">
+			</div>
+			<div class="input-group">
+				<label for="password">Password</label>
+				<input type="password" id="password" required autocomplete="off">
+			</div>
+			<button type="submit" class="login-btn">Login</button>
+			<div id="errorMessage" class="error-message">Invalid username or password</div>
+		</form>
+	</div>
+
+	<script>
+		document.getElementById('loginForm').addEventListener('submit', function (e) {
+			e.preventDefault();
+			const user = document.getElementById('username').value;
+			const pass = document.getElementById('password').value;
+
+			if (user === 'simley_girl' && pass === 'Rohini') {
+				document.body.style.transition = 'opacity 1s ease-in-out';
+				document.body.style.opacity = '0';
+				setTimeout(() => {
+					window.location.href = 'birthday.html';
+				}, 1000);
+			} else {
+				const errorEl = document.getElementById('errorMessage');
+				errorEl.style.display = 'block';
+				setTimeout(() => { errorEl.style.display = 'none'; }, 3000);
+			}
+		});
+	</script>
+</body>
+
+</html>
