@@ -477,7 +477,11 @@
         }
       }
       onCheck() {
-        // Disabled snapping for continuous auto-scroll
+        if (!this.medias || !this.medias[0]) return;
+        const width = this.medias[0].width;
+        const itemIndex = Math.round(Math.abs(this.scroll.target) / width);
+        const item = width * itemIndex;
+        this.scroll.target = this.scroll.target < 0 ? -item : item;
       }
       onResize() {
         this.screen = { width: this.container.clientWidth, height: this.container.clientHeight };
@@ -492,11 +496,6 @@
         }
       }
       update() {
-        // Auto-scroll when the user is not dragging
-        if (!this.isDown) {
-          this.scroll.target += this.scrollSpeed * 0.1;
-        }
-
         this.scroll.current = lerp(this.scroll.current, this.scroll.target, this.scroll.ease);
         const direction = this.scroll.current > this.scroll.last ? 'right' : 'left';
         if (this.medias) {
