@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Circular Gallery</title>
   <link rel="stylesheet" href="circle.css">
   <style>
-    body, html {
+    body,
+    html {
       margin: 0;
       padding: 0;
       width: 100%;
@@ -15,13 +17,14 @@
       background-color: #000;
       font-family: sans-serif;
     }
+
     .circular-gallery {
       width: 100%;
       height: 100%;
       outline: none;
     }
 
-    /* Back button */
+
     .back-btn {
       position: absolute;
       top: 20px;
@@ -39,18 +42,18 @@
       z-index: 1000;
       font-size: 1rem;
     }
+
     .back-btn:hover {
       background: rgba(255, 255, 255, 0.25);
-      box-shadow: 0 0 16px rgba(255,255,255,0.2);
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.2);
     }
 
-    /* Hint label */
     .hint-label {
       position: absolute;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      color: rgba(255,255,255,0.4);
+      color: rgba(255, 255, 255, 0.4);
       font-size: 0.85rem;
       pointer-events: none;
       z-index: 1000;
@@ -65,11 +68,13 @@
         padding: 8px 14px;
         font-size: 0.85rem;
       }
+
       .hint-label {
         font-size: 0.75rem;
         bottom: 14px;
       }
     }
+
     @media (max-width: 480px) {
       .back-btn {
         top: 10px;
@@ -80,9 +85,11 @@
     }
   </style>
 </head>
+
 <body>
   <a href="carousel.html" class="back-btn">&#8592; Back</a>
-  <div id="gallery" class="circular-gallery" tabindex="0" role="region" aria-label="Circular image gallery. Use left and right arrow keys to navigate."></div>
+  <div id="gallery" class="circular-gallery" tabindex="0" role="region"
+    aria-label="Circular image gallery. Use left and right arrow keys to navigate."></div>
   <p class="hint-label">Drag or swipe to explore &bull; Use ← → keys to navigate</p>
 
   <script type="module">
@@ -169,7 +176,7 @@
           try {
             await document.fonts.load(font);
             await document.fonts.ready;
-          } catch {}
+          } catch { }
         }
         return font;
       }
@@ -181,7 +188,7 @@
         if (document.fonts && document.fonts.load) {
           try {
             await document.fonts.load(resolved);
-          } catch {}
+          } catch { }
         }
         return resolved;
       } catch (error) {
@@ -484,18 +491,18 @@
       }
       createMedias(items, bend = 1, textColor, borderRadius, font) {
         const defaultItems = [
-          { image: 'image/strawberry.png', text: 'Bridge' },
-          { image: `https://picsum.photos/seed/2/800/600?grayscale`, text: 'Desk Setup' },
-          { image: `https://picsum.photos/seed/3/800/600?grayscale`, text: 'Waterfall' },
-          { image: `https://picsum.photos/seed/4/800/600?grayscale`, text: 'Strawberries' },
-          { image: `https://picsum.photos/seed/5/800/600?grayscale`, text: 'Deep Diving' },
-          { image: `https://picsum.photos/seed/16/800/600?grayscale`, text: 'Train Track' },
-          { image: `https://picsum.photos/seed/17/800/600?grayscale`, text: 'Santorini' },
-          { image: `https://picsum.photos/seed/8/800/600?grayscale`, text: 'Blurry Lights' },
-          { image: `https://picsum.photos/seed/9/800/600?grayscale`, text: 'New York' },
-          { image: `https://picsum.photos/seed/10/800/600?grayscale`, text: 'Good Boy' },
-          { image: `https://picsum.photos/seed/21/800/600?grayscale`, text: 'Coastline' },
-          { image: `https://picsum.photos/seed/12/800/600?grayscale`, text: 'Palm Trees' }
+          { image: 'image/image1.png' },
+          { image: 'image/image2.png' },
+          { image: 'image/image3.png' },
+          { image: 'image/image4.png' },
+          { image: 'image/image5.png' },
+          { image: 'image/image6.png' },
+          { image: 'image/image7.png' },
+          { image: 'image/image8.png' },
+          { image: 'image/image9.png' },
+          { image: 'image/image10.png' },
+          { image: 'image/image11.png' },
+          { image: 'image/image12.png' }
         ];
         const galleryItems = items && items.length ? items : defaultItems;
         this.mediasImages = galleryItems.concat(galleryItems);
@@ -619,4 +626,5 @@
     });
   </script>
 </body>
+
 </html>
