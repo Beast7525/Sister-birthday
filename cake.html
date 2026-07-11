@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎂 Make a Wish! 🎂</title>
+    <meta name="description" content="Make a wish and blow out the candles on your virtual birthday cake! Click or touch the flames to extinguish them.">
+    <link rel="stylesheet" href="cake.css">
+</head>
+
+<body>
+    <main class="cake-page" id="main-content">
+        <header class="header" id="page-header">
+            <h1 class="title" id="cake-heading">🎂 Make a wish and blow out the candles! 🎂</h1>
+            <div class="counter-display" id="counter-box">
+                Candles remaining: <span id="lit-count">0</span>
+            </div>
+        </header>
+
+        <section class="cake-area" id="interactive-cake-area" aria-label="Birthday Cake">
+            <div class="cake" id="birthday-cake">
+                
+                <!-- Top Tier of the Cake -->
+                <div class="cake-tier tier-top" id="tier-3">
+                    <div class="frosting"></div>
+                    <div class="sprinkles-container" id="sprinkles-top"></div>
+                    <!-- Container for dynamically generated candles -->
+                    <div class="candles-container" id="candles-container"></div>
+                </div>
+
+                <!-- Middle Tier of the Cake -->
+                <div class="cake-tier tier-middle" id="tier-2">
+                    <div class="frosting"></div>
+                    <div class="sprinkles-container" id="sprinkles-middle"></div>
+                </div>
+
+                <!-- Bottom Tier of the Cake -->
+                <div class="cake-tier tier-bottom" id="tier-1">
+                    <div class="frosting"></div>
+                    <div class="sprinkles-container" id="sprinkles-bottom"></div>
+                </div>
+
+            </div>
+            
+            <!-- Cake Stand base -->
+            <div class="cake-stand" id="cake-base-stand"></div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Configuration: Make the number of candles easy to change
+            const CANDLE_COUNT = 5;
+
+            const candlesContainer = document.getElementById('candles-container');
+            const litCountDisplay = document.getElementById('lit-count');
+
+            let remainingLit = CANDLE_COUNT;
+            litCountDisplay.textContent = remainingLit;
+
+            // Generate sprinkles dynamically on all cake tiers
+            const generateSprinkles = (containerId, count) => {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                for (let i = 0; i < count; i++) {
+                    const sprinkle = document.createElement('div');
+                    sprinkle.className = 'sprinkle';
+                    sprinkle.style.left = `${Math.random() * 80 + 10}%`;
+                    sprinkle.style.top = `${Math.random() * 50 + 25}%`;
+                    container.appendChild(sprinkle);
+                }
+            };
+
+            generateSprinkles('sprinkles-top', 12);
+            generateSprinkles('sprinkles-middle', 22);
+            generateSprinkles('sprinkles-bottom', 32);
+
+            // Palette of colorful candle body themes
+            const candleColors = [
+                '#ff6b6b', // Coral
+                '#4dadf7', // Blue
+                '#51cf66', // Green
+                '#fcc419', // Yellow
+                '#cc5de8', // Purple
+                '#ff922b', // Orange
+            ];
+
+            // Build and position candles on the top tier surface
+            for (let i = 0; i < CANDLE_COUNT; i++) {
+                const candle = document.createElement('div');
+                candle.className = 'candle';
+                candle.id = `candle-${i + 1}`;
+
+                // Positioning calculation to space candles evenly in a realistic 3D arc
+                let leftPercent;
+                if (CANDLE_COUNT === 1) {
+                    leftPercent = 50;
+                } else {
+                    leftPercent = 15 + (70 / (CANDLE_COUNT - 1)) * i;
+                }
+
+                // Create a slight curved vertical offset for a round, volumetric appearance
+                const mid = (CANDLE_COUNT - 1) / 2;
+                const distanceFromCenter = Math.abs(i - mid);
+                // Lower the outer candles slightly (up to 8px) to match the ellipse curvature
+                const verticalOffset = distanceFromCenter * (8 / (mid || 1));
+
+                candle.style.left = `${leftPercent}%`;
+                // Position candles slightly higher than the top border of the top tier, matching the arc
+                candle.style.bottom = `${45 - verticalOffset}px`;
+
+                // Assign random pastel colors from the palette to the candle bodies
+                const themeColor = candleColors[i % candleColors.length];
+                candle.style.setProperty('--candle-color', themeColor);
+
+                // Create candle inner components: flame with glowing layers, wick, and smoke puff element
+                candle.innerHTML = `
+                    <div class="flame" id="flame-${i + 1}" role="button" aria-label="Candle flame ${i + 1}, click to extinguish">
+                        <div class="flame-red"></div>
+                        <div class="flame-orange"></div>
+                        <div class="flame-yellow"></div>
+                        <div class="flame-white"></div>
+                        <div class="flame-blue"></div>
+                    </div>
+                    <div class="wick" id="wick-${i + 1}"></div>
+                    <div class="smoke" id="smoke-${i + 1}"></div>
+                `;
+
+                const flame = candle.querySelector('.flame');
+                const smoke = candle.querySelector('.smoke');
+
+                // Function to extinguish the candle
+                const extinguish = () => {
+                    if (flame.classList.contains('extinguished')) return;
+
+                    // Add transition classes and disable touch/click events
+                    flame.classList.add('extinguished');
+                    flame.style.pointerEvents = 'none';
+                    smoke.classList.add('active');
+
+                    // Decrement counting state
+                    remainingLit--;
+                    litCountDisplay.textContent = remainingLit;
+
+                    // Check if all candles are blown out
+                    if (remainingLit === 0) {
+                        setTimeout(() => {
+                            window.location.href = "birthday.html";
+                        }, 1000);
+                    }
+                };
+
+                // Add event listeners for modern responsive touch and mouse inputs
+                flame.addEventListener('click', extinguish);
+                flame.addEventListener('touchstart', (event) => {
+                    event.preventDefault(); // Prevents double click on mobile devices
+                    extinguish();
+                });
+
+                candlesContainer.appendChild(candle);
+            }
+        });
+    </script>
+</body>
+
+</html>

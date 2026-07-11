@@ -1,0 +1,410 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;600;700&display=swap');
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #090514;
+    font-family: 'Inter', sans-serif;
+    color: #f8fafc;
+    overflow-x: hidden;
+}
+
+.cake-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    background: radial-gradient(circle at center, #1a153b 0%, #06040d 100%);
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+    z-index: 10;
+}
+
+.title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.8rem;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.4), 0 0 20px rgba(255, 105, 180, 0.3);
+    margin-bottom: 0.75rem;
+    animation: floatTitle 4s ease-in-out infinite alternate;
+}
+
+@keyframes floatTitle {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-8px); }
+}
+
+.counter-display {
+    font-size: 1.1rem;
+    color: #cbd5e1;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    display: inline-block;
+}
+
+.counter-display span {
+    color: #ff69b4;
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    margin-left: 4px;
+}
+
+/* Cake Structure CSS */
+.cake-area {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    width: 320px;
+    height: 320px;
+    margin-top: 1rem;
+}
+
+.cake {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: -5px;
+}
+
+.cake-tier {
+    position: relative;
+    border-radius: 16px 16px 8px 8px;
+    box-shadow: 
+        inset 0 4px 6px rgba(255, 255, 255, 0.35), 
+        inset 0 -6px 10px rgba(0, 0, 0, 0.3),
+        0 6px 15px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+}
+
+/* Top Tier */
+.tier-top {
+    width: 140px;
+    height: 55px;
+    background: linear-gradient(to right, #d4418e 0%, #ff8db2 50%, #d4418e 100%);
+    z-index: 3;
+    margin-bottom: -8px;
+}
+
+/* Middle Tier */
+.tier-middle {
+    width: 200px;
+    height: 65px;
+    background: linear-gradient(to right, #8a2387 0%, #e94057 50%, #8a2387 100%);
+    z-index: 2;
+    margin-bottom: -8px;
+}
+
+/* Bottom Tier */
+.tier-bottom {
+    width: 260px;
+    height: 75px;
+    background: linear-gradient(to right, #2c0b30 0%, #631d68 50%, #2c0b30 100%);
+    z-index: 1;
+}
+
+/* Drip Frosting on Tiers */
+.frosting {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 18px;
+    background: #ffffff;
+    border-radius: 16px 16px 0 0;
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.frosting::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 12px;
+    background-image: radial-gradient(circle at 10px 0, #ffffff 10px, transparent 11px);
+    background-size: 20px 20px;
+    background-repeat: repeat-x;
+}
+
+/* Sprinkles on the Cake Body */
+.sprinkles-container {
+    position: absolute;
+    inset: 15px 10px 5px;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.sprinkle {
+    position: absolute;
+    width: 4px;
+    height: 8px;
+    border-radius: 2px;
+    opacity: 0.85;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.sprinkle:nth-child(3n) { background-color: #ffd700; transform: rotate(15deg); }
+.sprinkle:nth-child(3n+1) { background-color: #00e5ff; transform: rotate(-35deg); }
+.sprinkle:nth-child(3n+2) { background-color: #ff007f; transform: rotate(45deg); }
+
+/* Stand */
+.cake-stand {
+    width: 290px;
+    height: 15px;
+    background: linear-gradient(to right, #cfd8dc 0%, #eceff1 50%, #cfd8dc 100%);
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    z-index: 0;
+    position: relative;
+}
+
+.cake-stand::after {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90px;
+    height: 40px;
+    background: linear-gradient(to right, #b0bec5 0%, #eceff1 50%, #b0bec5 100%);
+    clip-path: polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Candles Styling */
+.candles-container {
+    position: absolute;
+    top: 0; /* Align with the top of the top tier */
+    left: 0;
+    width: 100%;
+    height: 0;
+    z-index: 10;
+}
+
+.candle {
+    position: absolute;
+    width: 9px;
+    height: 44px;
+    background: linear-gradient(to right, var(--candle-color, #ff6b6b) 0%, #ffffff 45%, var(--candle-color, #ff6b6b) 100%);
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+    transform-origin: bottom center;
+    transition: all 0.3s ease;
+}
+
+.wick {
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 7px;
+    background: #374151;
+    border-radius: 1px;
+    transition: background-color 0.4s ease;
+}
+
+.flame {
+    position: absolute;
+    top: -33px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 28px;
+    cursor: pointer;
+    z-index: 15;
+    transform-origin: center bottom;
+    animation: flicker 1.5s ease-in-out infinite alternate;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glow under the flame */
+.flame::before {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 44px;
+    height: 44px;
+    background: radial-gradient(circle, rgba(255, 166, 0, 0.35) 0%, rgba(255, 166, 0, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1;
+    transition: opacity 0.6s ease;
+}
+
+/* Realistic Flame Layers */
+.flame-red {
+    width: 16px;
+    height: 24px;
+    background: radial-gradient(circle at bottom, #ff3d00 15%, rgba(255, 61, 0, 0) 80%);
+    border-radius: 50% 50% 20% 20%;
+    position: absolute;
+    bottom: 0;
+    filter: blur(0.5px);
+}
+
+.flame-orange {
+    width: 12px;
+    height: 19px;
+    background: radial-gradient(circle at bottom, #ff9100 20%, rgba(255, 145, 0, 0) 80%);
+    border-radius: 50% 50% 20% 20%;
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+    filter: blur(0.3px);
+}
+
+.flame-yellow {
+    width: 8px;
+    height: 14px;
+    background: radial-gradient(circle at bottom, #ffea00 25%, rgba(255, 234, 0, 0) 80%);
+    border-radius: 50% 50% 20% 20%;
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+}
+
+.flame-white {
+    width: 4px;
+    height: 8px;
+    background: #ffffff;
+    border-radius: 50% 50% 20% 20%;
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+}
+
+.flame-blue {
+    width: 8px;
+    height: 5px;
+    background: #2979ff;
+    border-radius: 50% 50% 0 0;
+    position: absolute;
+    bottom: 0;
+    left: 4px;
+    opacity: 0.85;
+}
+
+/* Extinguished State */
+.flame.extinguished {
+    opacity: 0;
+    transform: translateX(-50%) scale(0);
+    pointer-events: none;
+}
+
+.flame.extinguished::before {
+    opacity: 0;
+}
+
+/* Smoke puff animation */
+.smoke {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: rgba(200, 200, 200, 0.75);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.smoke.active {
+    animation: smokeRise 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes smokeRise {
+    0% {
+        transform: translateX(-50%) translateY(0) scale(1);
+        opacity: 0.8;
+        filter: blur(0.5px);
+    }
+    25% {
+        transform: translateX(-35%) translateY(-15px) scale(2.8);
+        opacity: 0.55;
+        filter: blur(1.5px);
+    }
+    60% {
+        transform: translateX(-65%) translateY(-35px) scale(4.5);
+        opacity: 0.25;
+        filter: blur(3.5px);
+    }
+    100% {
+        transform: translateX(-50%) translateY(-60px) scale(6.5);
+        opacity: 0;
+        filter: blur(6px);
+    }
+}
+
+@keyframes flicker {
+    0% { transform: translateX(-50%) rotate(-1.5deg) scaleY(0.95); }
+    20% { transform: translateX(-50%) rotate(1deg) scaleY(1.05) scaleX(1.02); }
+    40% { transform: translateX(-50%) rotate(-1deg) scaleY(0.98) scaleX(0.98); }
+    60% { transform: translateX(-50%) rotate(1.8deg) scaleY(1.03); }
+    80% { transform: translateX(-50%) rotate(-1.8deg) scaleY(0.97) scaleX(1.03); }
+    100% { transform: translateX(-50%) rotate(0deg) scaleY(1) scaleX(1); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .title {
+        font-size: 2.1rem;
+        padding: 0 10px;
+    }
+    
+    .cake-area {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .tier-top {
+        width: 120px;
+        height: 48px;
+    }
+    
+    .tier-middle {
+        width: 170px;
+        height: 56px;
+    }
+    
+    .tier-bottom {
+        width: 220px;
+        height: 64px;
+    }
+    
+    .cake-stand {
+        width: 250px;
+        height: 12px;
+    }
+    
+    .cake-stand::after {
+        width: 80px;
+        height: 32px;
+        top: 12px;
+    }
+}
